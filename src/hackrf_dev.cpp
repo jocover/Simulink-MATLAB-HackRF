@@ -106,8 +106,8 @@ int tx_callback(hackrf_transfer * transfer) {
 	}
 
 	for (int i = 0; i < bytes_to_read; i++) {
-		buf[(i << 1)] = (uint8_t)cb_data->outr[i + cb_data->index] * 128;
-		buf[(i << 1) + 1] = (uint8_t)cb_data->outi[i + cb_data->index] * 128;
+		buf[(i << 1)] = (char)cb_data->outr[i + cb_data->index] * 128;
+		buf[(i << 1) + 1] = (char)cb_data->outi[i + cb_data->index] * 128;
 
 	}
 	cb_data->index += bytes_to_read;
