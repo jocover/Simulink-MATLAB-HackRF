@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.3"
+    ComputedModelVersion    "1.8"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -30,7 +30,7 @@ Model {
       $ObjectID		      2
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [704.0, 411.0, 1087.0, 682.0]
+      Location		      [445.0, 223.0, 1087.0, 682.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		3
@@ -56,7 +56,7 @@ Model {
 	LoadSaveID		"0"
 	Extents			[1037.0, 504.0]
 	ZoomFactor		[1.0]
-	Offset			[0.0, 0.0]
+	Offset			[0.0, -31.374992430210114]
       }
     }
   }
@@ -66,9 +66,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "jiang_000"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Jun 12 20:20:18 2015"
-  RTWModifiedTimeStamp	  356041218
-  ModelVersionFormat	  "1.%<AutoIncrement:3>"
+  LastModifiedDate	  "Sat Jun 13 09:44:36 2015"
+  RTWModifiedTimeStamp	  356089474
+  ModelVersionFormat	  "1.%<AutoIncrement:8>"
   ConfigurationManager	  "none"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -805,7 +805,7 @@ Model {
   }
   System {
     Name		    "hackrf"
-    Location		    [704, 411, 1791, 1093]
+    Location		    [445, 223, 1532, 905]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -819,23 +819,22 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "2"
+    SIDHighWatermark	    "3"
     Block {
       BlockType		      S-Function
-      Name		      "hackrf_source"
-      SID		      "2"
-      Ports		      [0, 1]
-      Position		      [155, 87, 275, 153]
-      ZOrder		      4
-      FunctionName	      "hackrf_source"
-      Parameters	      "set_index,samplerate,set_bandwidth,set_freq,set_rxlna,set_rxvga,set_amp,set_frame,set_frame_ty"
-      "pe"
+      Name		      "hackrf_sink"
+      SID		      "3"
+      Ports		      [1]
+      Position		      [115, 157, 235, 223]
+      ZOrder		      10
+      FunctionName	      "hackrf_sink"
+      Parameters	      "set_index,samplerate,set_bandwidth,set_freq,set_txvga,set_amp,set_frame,set_frame_type"
       EnableBusSupport	      off
       Object {
 	$PropName		"MaskObject"
 	$ObjectID		20
 	$ClassName		"Simulink.Mask"
-	Type			"Hackrf Source"
+	Type			"Hackrf Sink"
 	Description		"Receive data from a HackRF device."
 	Initialization		"% initialize\n% S-params set_index,samplerate,set_bandwidth,set_freq,set_lnagain,set_rxvga1,set_rxvg"
 	"a2,set_frame,set_frame_type\nmask_display_text = [];\nport=0;\n% check identifier\nif (isreal(hackrf_device_index) &&"
@@ -852,23 +851,19 @@ Model {
 	"Low Pass Filter Bandwidth to satisfy Nyquist sampling rate');\nend\n% check frequency\nif (isreal(hackrf_frequency) &"
 	"& hackrf_frequency >= 0)\n        set_freq=uint32(hackrf_frequency);\n        if (set_freq ~= hackrf_frequency)\n    "
 	"            fprintf('Frequency adjusted to %d\\n',set_freq);\n        end\nelse\n    error('The frequency has to be n"
-	"umber greater than 0 !!!')\nend\n% AMP\nif (strcmp(get_param(gcb,'hackrf_rxamp'),'on'))\n        set_amp = 1;\n    el"
-	"se\n        set_amp = 0;\nend\n%RX LNA\nif (isreal(hackrf_rxlna))\n    if (hackrf_rxlna < 0)\n        error('RX LNA G"
-	"ain has to be greater than or equal to 0dB\\n');\n    elseif (hackrf_rxlna > 40)\n        error('RX LNA  Gain has to "
-	"be less than or equal to 40dB\\n');\n    else\n        set_rxlna = uint32(hackrf_rxlna);\n        if (set_rxlna ~= ha"
-	"ckrf_rxlna)\n            fprintf('RX LNA  Gain set to %u dB\\n', set_rxlna)\n        end\n    end\nend\n%RX VGA\nif ("
-	"isreal(hackrf_rxvga))\n    if (hackrf_rxvga < 0)\n        error('RX VGA Gain has to be greater than or equal to 0dB\\"
-	"n');\n    elseif (hackrf_rxvga > 62)\n        error('RX VGA Gain has to be less than or equal to 30dB\\n');\n    else"
-	"\n        set_rxvga = uint32(hackrf_rxvga);\n        if (set_rxvga ~= hackrf_rxvga)\n            fprintf('RXVGA2 Gain"
-	" set to %u dB\\n', set_rxvga)\n        end\n    end\nend\n% check frame length\nif (isreal(hackrf_frame_length) && ha"
-	"ckrf_frame_length > 0)\n    set_frame=hackrf_frame_length;\nelse\n    error('The frame length has to be number greate"
-	"r than 0 !!!')\nend\n\n% check frame type\nif (strcmp(get_param(gcb,'hackrf_frame_type'),'Frame'))\n    % use frames\n"
-	"    set_frame_type=1;\nelse\n    % use vectors\n    set_frame_type=0;\nend\n% set mask display\nset_param(gcb,'MaskDi"
-	"splay',mask_display_text);"
+	"umber greater than 0 !!!')\nend\n% AMP\nif (strcmp(get_param(gcb,'hackrf_txamp'),'on'))\n        set_amp = 1;\n    el"
+	"se\n        set_amp = 0;\nend\n\n%TX VGA\nif (isreal(hackrf_txvga))\n    if (hackrf_txvga < 0)\n        error('TX VGA"
+	" Gain has to be greater than or equal to 0dB\\n');\n    elseif (hackrf_txvga > 47)\n        error('TX VGA Gain has to"
+	" be less than or equal to 47dB\\n');\n    else\n        set_txvga = uint32(hackrf_txvga);\n        if (set_txvga ~= h"
+	"ackrf_txvga)\n            fprintf('TX VGA Gain set to %u dB\\n', set_txvga)\n        end\n    end\nend\n% check frame"
+	" length\nif (isreal(hackrf_frame_length) && hackrf_frame_length > 0)\n    set_frame=hackrf_frame_length;\nelse\n    e"
+	"rror('The frame length has to be number greater than 0 !!!')\nend\n\n% check frame type\nif (strcmp(get_param(gcb,'ha"
+	"ckrf_frame_type'),'Frame'))\n    % use frames\n    set_frame_type=1;\nelse\n    % use vectors\n    set_frame_type=0;\n"
+	"end\n% set mask display\nset_param(gcb,'MaskDisplay',mask_display_text);"
 	Display			"disp('HackRF #0');"
 	Array {
 	  Type			  "Simulink.MaskParameter"
-	  Dimension		  11
+	  Dimension		  10
 	  Object {
 	    $ObjectID		    21
 	    Type		    "edit"
@@ -958,26 +953,19 @@ Model {
 	      Cell		      "on"
 	      PropName		      "TypeOptions"
 	    }
-	    Name		    "hackrf_rxamp"
+	    Name		    "hackrf_txamp"
 	    Prompt		    "RF Gain (AMP)"
 	    Value		    "off"
 	  }
 	  Object {
 	    $ObjectID		    29
 	    Type		    "edit"
-	    Name		    "hackrf_rxlna"
-	    Prompt		    "RXLNA Gain (dB)"
-	    Value		    "8"
+	    Name		    "hackrf_txvga"
+	    Prompt		    "TXVGA Gain (dB)"
+	    Value		    "0"
 	  }
 	  Object {
 	    $ObjectID		    30
-	    Type		    "edit"
-	    Name		    "hackrf_rxvga"
-	    Prompt		    "RXVGA Gain (dB)"
-	    Value		    "16"
-	  }
-	  Object {
-	    $ObjectID		    31
 	    Type		    "checkbox"
 	    Name		    "hackrf_restore_block"
 	    Prompt		    "Restore Block Size (click)"
@@ -987,37 +975,37 @@ Model {
 	}
 	Object {
 	  $PropName		  "DialogControls"
-	  $ObjectID		  32
+	  $ObjectID		  31
 	  $ClassName		  "Simulink.dialog.Group"
 	  Prompt		  "%<MaskType>"
 	  Array {
 	    Type		    "Simulink.dialog.Control"
 	    Dimension		    2
 	    Object {
-	      $ObjectID		      33
+	      $ObjectID		      32
 	      $ClassName	      "Simulink.dialog.Text"
 	      Prompt		      "%<MaskDescription>"
 	      Name		      "DescTextVar"
 	    }
 	    Object {
-	      $ObjectID		      34
+	      $ObjectID		      33
 	      $ClassName	      "Simulink.dialog.TabContainer"
 	      Array {
 		Type			"Simulink.dialog.Tab"
 		Dimension		4
 		Object {
-		  $ObjectID		  35
+		  $ObjectID		  34
 		  Prompt		  "Device"
 		  Array {
 		    Type		    "Simulink.dialog.parameter.Control"
 		    Dimension		    2
 		    Object {
-		    $ObjectID		    36
+		    $ObjectID		    35
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_device_index"
 		    }
 		    Object {
-		    $ObjectID		    37
+		    $ObjectID		    36
 		    $ClassName		    "Simulink.dialog.parameter.CheckBox"
 		    Name		    "hackrf_query"
 		    }
@@ -1026,28 +1014,28 @@ Model {
 		  Name			  "ParameterTabVar0"
 		}
 		Object {
-		  $ObjectID		  38
+		  $ObjectID		  37
 		  Prompt		  "Baseband"
 		  Array {
 		    Type		    "Simulink.dialog.parameter.Control"
 		    Dimension		    4
 		    Object {
-		    $ObjectID		    39
+		    $ObjectID		    38
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_samplerate"
 		    }
 		    Object {
-		    $ObjectID		    40
+		    $ObjectID		    39
 		    $ClassName		    "Simulink.dialog.parameter.Popup"
 		    Name		    "hackrf_lpf"
 		    }
 		    Object {
-		    $ObjectID		    41
+		    $ObjectID		    40
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_frame_length"
 		    }
 		    Object {
-		    $ObjectID		    42
+		    $ObjectID		    41
 		    $ClassName		    "Simulink.dialog.parameter.Popup"
 		    Name		    "hackrf_frame_type"
 		    }
@@ -1056,28 +1044,309 @@ Model {
 		  Name			  "ParameterTabVar01"
 		}
 		Object {
-		  $ObjectID		  43
+		  $ObjectID		  42
+		  Prompt		  "RF-Frontend"
+		  Array {
+		    Type		    "Simulink.dialog.parameter.Control"
+		    Dimension		    3
+		    Object {
+		    $ObjectID		    43
+		    $ClassName		    "Simulink.dialog.parameter.Edit"
+		    Name		    "hackrf_frequency"
+		    }
+		    Object {
+		    $ObjectID		    44
+		    $ClassName		    "Simulink.dialog.parameter.Popup"
+		    Name		    "hackrf_txamp"
+		    }
+		    Object {
+		    $ObjectID		    45
+		    $ClassName		    "Simulink.dialog.parameter.Edit"
+		    Name		    "hackrf_txvga"
+		    }
+		    PropName		    "DialogControls"
+		  }
+		  Name			  "ParameterTabVar012"
+		}
+		Object {
+		  $ObjectID		  46
+		  Prompt		  "Misc"
+		  Object {
+		    $PropName		    "DialogControls"
+		    $ObjectID		    47
+		    $ClassName		    "Simulink.dialog.parameter.CheckBox"
+		    Name		    "hackrf_restore_block"
+		  }
+		  Name			  "ParameterTabVar0123"
+		}
+		PropName		"DialogControls"
+	      }
+	      Name		      "ParameterTabContainerVar"
+	    }
+	    PropName		    "DialogControls"
+	  }
+	  Name			  "DescGroupVar"
+	}
+      }
+    }
+    Block {
+      BlockType		      S-Function
+      Name		      "hackrf_source"
+      SID		      "2"
+      Ports		      [0, 1]
+      Position		      [115, 57, 235, 123]
+      ZOrder		      4
+      FunctionName	      "hackrf_source"
+      Parameters	      "set_index,samplerate,set_bandwidth,set_freq,set_rxlna,set_rxvga,set_amp,set_frame,set_frame_ty"
+      "pe"
+      EnableBusSupport	      off
+      Object {
+	$PropName		"MaskObject"
+	$ObjectID		48
+	$ClassName		"Simulink.Mask"
+	Type			"Hackrf Source"
+	Description		"Receive data from a HackRF device."
+	Initialization		"% initialize\n% S-params set_index,samplerate,set_bandwidth,set_freq,set_lnagain,set_rxvga1,set_rxvg"
+	"a2,set_frame,set_frame_type\nmask_display_text = [];\nport=0;\n% check identifier\nif (isreal(hackrf_device_index) &&"
+	" hackrf_device_index >= 0)\n    set_index=hackrf_device_index;\nelse\n    error('The device index must be a number gr"
+	"eater or equal 0 !!!')\nend\n\n% mask display device index\nif strcmp(get_param(gcb,'hackrf_device_index'),' ')\n    "
+	"mask_display_text = [mask_display_text 'disp(''No Device'');'];\nelse\n    mask_display_text = [mask_display_text 'di"
+	"sp(''HackRF #' num2str(hackrf_device_index) ''');'];\nend\nif (hackrf_samplerate < hackrf_lpf)\n    warning('The band"
+	"width should be lower than the samplerate, use with caution')\nend\n% check samplerate\nif (isreal(hackrf_samplerate)"
+	")\n    if (hackrf_samplerate > 0)\n        samplerate=uint32(hackrf_samplerate);\n        if (samplerate ~= hackrf_sa"
+	"mplerate)\n            fprintf('Sample Rate adjusted to %u Sps\\n',samplerate);\n        end\n    else\n        error"
+	"('The samplerate has to be greater than 0 !!!')\n    end\nelse\n    error('The samplerate has to be number !!!')\nend"
+	"\nbws = [28e6 24e6 20e6 15e6 14e6 12e6 10e6 9e6 8e6 7e6 6e6 5.5e6 5e6 3.5e6 2.5e6 1.75e6];\nset_bandwidth = bws(hackr"
+	"f_lpf);\nif (set_bandwidth > hackrf_samplerate)\n    warning('Sampling rate (Sps) should be equal to or greater than "
+	"Low Pass Filter Bandwidth to satisfy Nyquist sampling rate');\nend\n% check frequency\nif (isreal(hackrf_frequency) &"
+	"& hackrf_frequency >= 0)\n        set_freq=uint32(hackrf_frequency);\n        if (set_freq ~= hackrf_frequency)\n    "
+	"            fprintf('Frequency adjusted to %d\\n',set_freq);\n        end\nelse\n    error('The frequency has to be n"
+	"umber greater than 0 !!!')\nend\n% AMP\nif (strcmp(get_param(gcb,'hackrf_rxamp'),'on'))\n        set_amp = 1;\n    el"
+	"se\n        set_amp = 0;\nend\n%RX LNA\nif (isreal(hackrf_rxlna))\n    if (hackrf_rxlna < 0)\n        error('RX LNA G"
+	"ain has to be greater than or equal to 0dB\\n');\n    elseif (hackrf_rxlna > 40)\n        error('RX LNA Gain has to b"
+	"e less than or equal to 40dB\\n');\n    else\n        set_rxlna = uint32(hackrf_rxlna);\n        if (set_rxlna ~= hac"
+	"krf_rxlna)\n            fprintf('RX LNA  Gain set to %u dB\\n', set_rxlna)\n        end\n    end\nend\n%RX VGA\nif (i"
+	"sreal(hackrf_rxvga))\n    if (hackrf_rxvga < 0)\n        error('RX VGA Gain has to be greater than or equal to 0dB\\n"
+	"');\n    elseif (hackrf_rxvga > 62)\n        error('RX VGA Gain has to be less than or equal to 62dB\\n');\n    else\n"
+	"        set_rxvga = uint32(hackrf_rxvga);\n        if (set_rxvga ~= hackrf_rxvga)\n            fprintf('RX VGA Gain s"
+	"et to %u dB\\n', set_rxvga)\n        end\n    end\nend\n% check frame length\nif (isreal(hackrf_frame_length) && hack"
+	"rf_frame_length > 0)\n    set_frame=hackrf_frame_length;\nelse\n    error('The frame length has to be number greater "
+	"than 0 !!!')\nend\n\n% check frame type\nif (strcmp(get_param(gcb,'hackrf_frame_type'),'Frame'))\n    % use frames\n "
+	"   set_frame_type=1;\nelse\n    % use vectors\n    set_frame_type=0;\nend\n% set mask display\nset_param(gcb,'MaskDis"
+	"play',mask_display_text);"
+	Display			"disp('HackRF #0');"
+	Array {
+	  Type			  "Simulink.MaskParameter"
+	  Dimension		  11
+	  Object {
+	    $ObjectID		    49
+	    Type		    "edit"
+	    Name		    "hackrf_device_index"
+	    Prompt		    "Device Index:"
+	    Value		    "0"
+	  }
+	  Object {
+	    $ObjectID		    50
+	    Type		    "checkbox"
+	    Name		    "hackrf_query"
+	    Prompt		    "Find Devices (click, see MATLAB console output)"
+	    Value		    "off"
+	    Callback		    "stat=get_param(gcb,'hackrf_query');\nset_param(gcb,'hackrf_query','off');\n\nif strcmp(stat,'on')\n"
+	    "    clear stat;\n    hackrf_find_devices;\nend\n\nclear stat;"
+	  }
+	  Object {
+	    $ObjectID		    51
+	    Type		    "edit"
+	    Name		    "hackrf_samplerate"
+	    Prompt		    "Sample Rate (SPS):"
+	    Value		    "10e6"
+	  }
+	  Object {
+	    $ObjectID		    52
+	    Type		    "popup"
+	    Array {
+	      Type		      "Cell"
+	      Dimension		      16
+	      Cell		      "28 MHz"
+	      Cell		      "24 MHz"
+	      Cell		      "20 MHz"
+	      Cell		      "15 Mhz"
+	      Cell		      "14 Mhz"
+	      Cell		      "12 Mhz"
+	      Cell		      "10 Mhz"
+	      Cell		      "9 Mhz"
+	      Cell		      "8 Mhz"
+	      Cell		      "7 Mhz"
+	      Cell		      "6 MHz"
+	      Cell		      "5.5 Mhz"
+	      Cell		      "5 MHz"
+	      Cell		      "3.5 MHz"
+	      Cell		      "2.5 MHz"
+	      Cell		      "1.75 MHz"
+	      PropName		      "TypeOptions"
+	    }
+	    Name		    "hackrf_lpf"
+	    Prompt		    "Low Pass Filter Bandwidth:"
+	    Value		    "10 Mhz"
+	  }
+	  Object {
+	    $ObjectID		    53
+	    Type		    "edit"
+	    Name		    "hackrf_frame_length"
+	    Prompt		    "Samples per frame"
+	    Value		    "1024"
+	  }
+	  Object {
+	    $ObjectID		    54
+	    Type		    "popup"
+	    Array {
+	      Type		      "Cell"
+	      Dimension		      2
+	      Cell		      "Frame"
+	      Cell		      "Vector"
+	      PropName		      "TypeOptions"
+	    }
+	    Name		    "hackrf_frame_type"
+	    Prompt		    "Output Type:"
+	    Value		    "Frame"
+	  }
+	  Object {
+	    $ObjectID		    55
+	    Type		    "edit"
+	    Name		    "hackrf_frequency"
+	    Prompt		    "Carrier Frequency (Hz):"
+	    Value		    "100e6"
+	  }
+	  Object {
+	    $ObjectID		    56
+	    Type		    "popup"
+	    Array {
+	      Type		      "Cell"
+	      Dimension		      2
+	      Cell		      "off"
+	      Cell		      "on"
+	      PropName		      "TypeOptions"
+	    }
+	    Name		    "hackrf_rxamp"
+	    Prompt		    "RF Gain (AMP)"
+	    Value		    "off"
+	  }
+	  Object {
+	    $ObjectID		    57
+	    Type		    "edit"
+	    Name		    "hackrf_rxlna"
+	    Prompt		    "RXLNA Gain (dB)"
+	    Value		    "8"
+	  }
+	  Object {
+	    $ObjectID		    58
+	    Type		    "edit"
+	    Name		    "hackrf_rxvga"
+	    Prompt		    "RXVGA Gain (dB)"
+	    Value		    "16"
+	  }
+	  Object {
+	    $ObjectID		    59
+	    Type		    "checkbox"
+	    Name		    "hackrf_restore_block"
+	    Prompt		    "Restore Block Size (click)"
+	    Value		    "on"
+	  }
+	  PropName		  "Parameters"
+	}
+	Object {
+	  $PropName		  "DialogControls"
+	  $ObjectID		  60
+	  $ClassName		  "Simulink.dialog.Group"
+	  Prompt		  "%<MaskType>"
+	  Array {
+	    Type		    "Simulink.dialog.Control"
+	    Dimension		    2
+	    Object {
+	      $ObjectID		      61
+	      $ClassName	      "Simulink.dialog.Text"
+	      Prompt		      "%<MaskDescription>"
+	      Name		      "DescTextVar"
+	    }
+	    Object {
+	      $ObjectID		      62
+	      $ClassName	      "Simulink.dialog.TabContainer"
+	      Array {
+		Type			"Simulink.dialog.Tab"
+		Dimension		4
+		Object {
+		  $ObjectID		  63
+		  Prompt		  "Device"
+		  Array {
+		    Type		    "Simulink.dialog.parameter.Control"
+		    Dimension		    2
+		    Object {
+		    $ObjectID		    64
+		    $ClassName		    "Simulink.dialog.parameter.Edit"
+		    Name		    "hackrf_device_index"
+		    }
+		    Object {
+		    $ObjectID		    65
+		    $ClassName		    "Simulink.dialog.parameter.CheckBox"
+		    Name		    "hackrf_query"
+		    }
+		    PropName		    "DialogControls"
+		  }
+		  Name			  "ParameterTabVar0"
+		}
+		Object {
+		  $ObjectID		  66
+		  Prompt		  "Baseband"
+		  Array {
+		    Type		    "Simulink.dialog.parameter.Control"
+		    Dimension		    4
+		    Object {
+		    $ObjectID		    67
+		    $ClassName		    "Simulink.dialog.parameter.Edit"
+		    Name		    "hackrf_samplerate"
+		    }
+		    Object {
+		    $ObjectID		    68
+		    $ClassName		    "Simulink.dialog.parameter.Popup"
+		    Name		    "hackrf_lpf"
+		    }
+		    Object {
+		    $ObjectID		    69
+		    $ClassName		    "Simulink.dialog.parameter.Edit"
+		    Name		    "hackrf_frame_length"
+		    }
+		    Object {
+		    $ObjectID		    70
+		    $ClassName		    "Simulink.dialog.parameter.Popup"
+		    Name		    "hackrf_frame_type"
+		    }
+		    PropName		    "DialogControls"
+		  }
+		  Name			  "ParameterTabVar01"
+		}
+		Object {
+		  $ObjectID		  71
 		  Prompt		  "RF-Frontend"
 		  Array {
 		    Type		    "Simulink.dialog.parameter.Control"
 		    Dimension		    4
 		    Object {
-		    $ObjectID		    44
+		    $ObjectID		    72
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_frequency"
 		    }
 		    Object {
-		    $ObjectID		    45
+		    $ObjectID		    73
 		    $ClassName		    "Simulink.dialog.parameter.Popup"
 		    Name		    "hackrf_rxamp"
 		    }
 		    Object {
-		    $ObjectID		    46
+		    $ObjectID		    74
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_rxlna"
 		    }
 		    Object {
-		    $ObjectID		    47
+		    $ObjectID		    75
 		    $ClassName		    "Simulink.dialog.parameter.Edit"
 		    Name		    "hackrf_rxvga"
 		    }
@@ -1086,11 +1355,11 @@ Model {
 		  Name			  "ParameterTabVar012"
 		}
 		Object {
-		  $ObjectID		  48
+		  $ObjectID		  76
 		  Prompt		  "Misc"
 		  Object {
 		    $PropName		    "DialogControls"
-		    $ObjectID		    49
+		    $ObjectID		    77
 		    $ClassName		    "Simulink.dialog.parameter.CheckBox"
 		    Name		    "hackrf_restore_block"
 		  }
