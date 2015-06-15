@@ -49,9 +49,11 @@ struct SampleBuffer
 	unsigned int  head;
 	unsigned int offset;
 	unsigned int tail;
-    int count;
+	int count;
 	int samp_avail;
 	bool underrun;
+	bool underrun_before;
+
 };
 
 
@@ -196,16 +198,18 @@ static int tx_callback(hackrf_transfer * transfer)
 	if (sbuf->count == 0){
 		memset(buf, 0, len);
 		sbuf->underrun = true;
-	}else{
+		sbuf->underrun_before = true;
+	}
+	else{
 
-	memcpy(buf, sbuf->buf[sbuf->tail], len);
-	sbuf->tail = (sbuf->head + 1) % sbuf->num;
-	sbuf->count--;
+		memcpy(buf, sbuf->buf[sbuf->tail], len);
+		sbuf->tail = (sbuf->head + 1) % sbuf->num;
+		sbuf->count--;
 
 
-	}	
-		
-	pthread_mutex_unlock(mutex);	
+	}
+
+	pthread_mutex_unlock(mutex);
 	// notify output function
 	pthread_cond_signal((pthread_cond_t*)ssGetPWorkValue(S, COND_VAR));
 
@@ -285,9 +289,9 @@ static void mdlStart(SimStruct *S)
 
 	SampleBuffer *sbuf = (SampleBuffer*)malloc(sizeof(SampleBuffer));
 	sbuf->num = BUF_NUM;
-	sbuf->head = sbuf->offset =sbuf->count=sbuf->tail = 0;
+	sbuf->head = sbuf->offset = sbuf->count = sbuf->tail = 0;
 	sbuf->samp_avail = BUF_SIZE / BYTES_PER_SAMPLE;
-	sbuf->underrun = false;
+	sbuf->underrun = sbuf->underrun_before = false;
 	sbuf->buf = (unsigned char **)malloc(sbuf->num * sizeof(unsigned char *));
 	if (sbuf->buf) {
 		for (unsigned int i = 0; i < sbuf->num; ++i)
@@ -351,11 +355,11 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 		pthread_mutex_lock(mutex);
 
 		sbuf->head = (sbuf->head + 1) % sbuf->num;
-        sbuf->count++;
+		sbuf->count++;
 
 		pthread_mutex_unlock(mutex);
 
-		   // set to start of the next sample buffer
+		// set to start of the next sample buffer
 
 		buf = (char *)sbuf->buf[sbuf->head];
 
@@ -402,6 +406,10 @@ static void mdlTerminate(SimStruct *S)
 	if (ssGetPWorkValue(S, SBUF))
 	{
 		SampleBuffer *sbuf = (SampleBuffer *)ssGetPWorkValue(S, SBUF);
+
+		if (sbuf->underrun_before) {
+			ssPrintf("\n");
+		}
 
 		if (sbuf->buf) {
 			for (unsigned int i = 0; i < sbuf->num; ++i) {
