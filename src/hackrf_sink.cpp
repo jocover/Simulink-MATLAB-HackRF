@@ -203,7 +203,7 @@ static int tx_callback(hackrf_transfer * transfer)
 	else{
 
 		memcpy(buf, sbuf->buf[sbuf->tail], len);
-		sbuf->tail = (sbuf->head + 1) % sbuf->num;
+		sbuf->tail = (sbuf->tail + 1) % sbuf->num;
 		sbuf->count--;
 
 
