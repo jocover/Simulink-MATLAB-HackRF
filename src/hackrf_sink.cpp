@@ -342,7 +342,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	{
 		for (int k = 0; k < BYTES_PER_SAMPLE * frame_length; ++k)
 		{
-			buf[k] = (char)(out[k] * 128.0);
+			buf[k] = (char)(out[k] * 127.0);
 		}
 		sbuf->offset += frame_length;
 		sbuf->samp_avail -= frame_length;
@@ -350,7 +350,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	else{
 		for (int k = 0; k < BYTES_PER_SAMPLE * sbuf->samp_avail; ++k)
 		{
-			buf[k] = (char)(out[k] * 128.0);
+			buf[k] = (char)(out[k] * 127.0);
 		}
 		pthread_mutex_lock(mutex);
 
@@ -366,7 +366,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 		int remaining = frame_length - sbuf->samp_avail;
 
 		for (int k = 0; k < BYTES_PER_SAMPLE*(remaining); ++k){
-			buf[k] = (char)(out[k + BYTES_PER_SAMPLE*sbuf->samp_avail] * 128.0);
+			buf[k] = (char)(out[k + BYTES_PER_SAMPLE*sbuf->samp_avail] * 127.0);
 		}
 		sbuf->offset = remaining;
 		sbuf->samp_avail = (BUF_SIZE / BYTES_PER_SAMPLE) - remaining;
