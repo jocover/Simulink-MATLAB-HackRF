@@ -25,8 +25,7 @@
 /* Simulink includes */
 #include <simstruc.h>
 #include <mex.h>
-
-#include <hackrf.h>
+#include "hackrf.h"
 
 /* Entry point to C/C++ */
 void mexFunction(int nlhs,mxArray *plhs[],int nrhs,const mxArray *prhs[])

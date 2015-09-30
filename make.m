@@ -53,9 +53,6 @@ elseif isunix
     options = { ...
         ['-l' 'hackrf']
     };
-    options_pthread = { ...
-        ['-l' 'pthread'] ...
-    };
 else
     error('Platform not supported')
 end
@@ -70,11 +67,11 @@ end
 % Set path hint
 % compile source and find_devices
 fprintf('\nCompiling hackrf_source.cpp ... ');
-mex(options{:},options_pthread{:},'-outdir',HACKRF_BIN_DIR,'src/hackrf_source.cpp')
+mex(options{:},'-outdir',HACKRF_BIN_DIR,'src/hackrf_source.cpp')
 fprintf('Done.\n');
 
 fprintf('\nCompiling hackrf_sink.cpp ... ');
-mex(options{:},options_pthread{:},'-outdir',HACKRF_BIN_DIR,'src/hackrf_sink.cpp')
+mex(options{:},'-outdir',HACKRF_BIN_DIR,'src/hackrf_sink.cpp')
 fprintf('Done.\n');
 
 fprintf('\nCompiling hackrf_find_devices.cpp ... ');

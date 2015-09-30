@@ -25,8 +25,7 @@
 #include "utilities.h"
 #include <string.h>
 /* HackRF includes */
-#include <hackrf.h>
-#include <pthread.h>
+#include "hackrf.h"
 
 /* interface */
 #define DEVICE_INDEX  prhs[0]
