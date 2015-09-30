@@ -81,8 +81,8 @@ int rx_callback(hackrf_transfer * transfer) {
 	}
 
 	for (int i = 0; i < bytes_to_write; i++) {
-		cb_data->outr[i + cb_data->index] = (double)(buf[(i << 1)] / 128.0f);
-		cb_data->outi[i + cb_data->index] = (double)(buf[(i << 1) + 1] / 128.0f);
+		cb_data->outr[i + cb_data->index] = (double)(buf[i*2] / 127.0f);
+		cb_data->outi[i + cb_data->index] = (double)(buf[i*2 + 1] / 127.0f);
 
 	}
 	cb_data->index += bytes_to_write;
@@ -106,8 +106,8 @@ int tx_callback(hackrf_transfer * transfer) {
 	}
 
 	for (int i = 0; i < bytes_to_read; i++) {
-		buf[(i << 1)] = (char)(cb_data->outr[i + cb_data->index] * 128);
-		buf[(i << 1) + 1] = (char)(cb_data->outi[i + cb_data->index] * 128);
+		buf[i*2] = (char)(cb_data->outr[i + cb_data->index] * 127.0);
+		buf[i*2+ 1] = (char)(cb_data->outi[i + cb_data->index] * 127.0);
 
 	}
 	cb_data->index += bytes_to_read;
@@ -301,22 +301,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 		/*set gain  TODO*/
 		double *gains = mxGetPr(GAIN);
 		if (rx &&mxGetN(GAIN) == 1){
-			_rxvga[device_index] = (int)gains[0] & ~0x01;
+			_rxvga[device_index] = (int)gains[0];
 		}
 		else if (rx &&mxGetN(GAIN) == 2){
-			_rxvga[device_index] = (int)gains[0] & ~0x01;
-			_lnagains[device_index] = (int)gains[1] & ~0x07;
+			_rxvga[device_index] = (int)gains[0] ;
+			_lnagains[device_index] = (int)gains[1] ;
 		}
 		else if (rx &&mxGetN(GAIN) == 3){
-			_rxvga[device_index] = (int)gains[0] & ~0x01;
-			_lnagains[device_index] = (int)gains[1] & ~0x07;
-			if ((int)gains[2] > 14)amp = 1;
+			_rxvga[device_index] = (int)gains[0];
+			_lnagains[device_index] = (int)gains[1];
+			if ((int)gains[2] > 0)amp = 1;
 		}
 		else if (!rx &&mxGetN(GAIN) == 1){
 			_txvga[device_index] = (int)gains[0];
 		}if (!rx &&mxGetN(GAIN) == 2){
 			_txvga[device_index] = (int)gains[0];
-			if ((int)gains[1] > 14)amp = 1;
+			if ((int)gains[1] > 0)amp = 1;
 		}
 
 
