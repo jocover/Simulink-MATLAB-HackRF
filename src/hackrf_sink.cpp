@@ -414,7 +414,6 @@ static void mdlTerminate( SimStruct *S )
 	{
 		std::mutex	* mutex = (std::mutex *) ssGetPWorkValue( S, MUTEX );
 		delete		mutex;
-		mutex = NULL;
 	}
 	if ( ssGetPWorkValue( S, COND_VAR ) )
 	{

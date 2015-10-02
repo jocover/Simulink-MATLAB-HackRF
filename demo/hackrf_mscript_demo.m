@@ -18,7 +18,7 @@
 %
 
 
-% Initialize rtl-sdr device
+% Initialize hackrf device
 handle=hackrf_dev(0);
 
 % plot the spectrum scope
