@@ -252,7 +252,7 @@ static void mdlStart( SimStruct *S )
 	list = hackrf_device_list();
 	if ( list->devicecount < 1 )
 	{
-		ssSetErrorStatusf( S, "No HackRF boards found.\n" );
+		ssSetErrorStatusf( S, "No HackRF boards found device #%d", device_index );
 		return;
 	}
 	/* open HackRF device */

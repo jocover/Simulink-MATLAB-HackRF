@@ -281,7 +281,7 @@ static void mdlStart( SimStruct *S )
 	list = hackrf_device_list();
 	if ( list->devicecount < 1 )
 	{
-		ssSetErrorStatusf( S, "No HackRF boards found.\n" );
+		ssSetErrorStatusf( S, "No HackRF boards found device #%d", device_index );
 		return;
 	}
 	/* open HackRF device */
@@ -372,7 +372,6 @@ static void mdlOutputs( SimStruct *S, int_T tid )
 	std::mutex * mutex = (std::mutex *) ssGetPWorkValue( S, MUTEX );
 
 	std::unique_lock <std::mutex> lock( *mutex );
-
 
 	std::condition_variable * cond_var = (std::condition_variable *) ssGetPWorkValue( S, COND_VAR );
 
