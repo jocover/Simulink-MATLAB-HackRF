@@ -321,7 +321,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
 		if (rx){
 			ret = hackrf_set_amp_enable(_devices[device_index], amp);
-			ret |= hackrf_set_vga_gain(_devices[device_index], _lnagains[device_index]);
+			ret |= hackrf_set_lna_gain(_devices[device_index], _lnagains[device_index]);
 			ret |= hackrf_set_vga_gain(_devices[device_index], _rxvga[device_index]);
 			if (ret != HACKRF_SUCCESS) {
 				sprintf(errmsg, "hackrf_set_gain() failed: %s (%d)\n", hackrf_error_name((hackrf_error)ret), ret);
