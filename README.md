@@ -1,2 +1,1 @@
-# Simulink-MATLAB-HackRF
-Simulink and MATLAB support for the HackRF
+move repo to https://github.com/kit-cel/simulink-hackrf
